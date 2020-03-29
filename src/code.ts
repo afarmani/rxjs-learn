@@ -16,14 +16,24 @@ var observable = Observable.create((observer:any) =>{
 });
 
 //observable need to subscribe to their data stream
-var observer = observable.subscribe(
+var observer1 = observable.subscribe(
     (x:any)=>addItem(x),
     (error:any) => addItem(error),
     () => addItem('Completed!!') //on complete() event above this will be last item
 );
 
+//add multiple subscribers
+var observer2 = observable.subscribe(
+    (x:any)=>addItem(x),
+    (error:any) => addItem(error),
+    () => addItem('Completed!!') //on complete() event above this will be last item
+);
+
+//create a observer hierarchy, when observer1 is unsubscribed observer2 will also get unsubscribed.
+observer1.add(observer2)
+
 setTimeout(() => {
-    observer.unsubscribe(); //timeouts after 6 seconds
+    observer1.unsubscribe(); //timeouts after 6 seconds
 },6000);
 
 function addItem(val:any){
